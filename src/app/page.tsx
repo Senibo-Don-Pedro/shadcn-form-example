@@ -2,6 +2,10 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+
+import { Eye, EyeOff } from "lucide-react";
+
 import {
   Form,
   FormControl,
@@ -30,6 +34,18 @@ const formSchema = z
   );
 
 export default function page() {
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] =
+    useState<boolean>(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,7 +93,19 @@ export default function page() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" type="password" {...field} />
+                    <div className="relative">
+                      <Input
+                        placeholder="Password"
+                        type={passwordVisible ? "text" : "password"}
+                        {...field}
+                      />
+                      <div
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      >
+                        {passwordVisible ? <EyeOff /> : <Eye />}
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,11 +120,19 @@ export default function page() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Confirm Password"
-                      type="password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Confirm Password"
+                        type={confirmPasswordVisible ? "text" : "password"}
+                        {...field}
+                      />
+                      <div
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                        onClick={toggleConfirmPasswordVisibility}
+                      >
+                        {confirmPasswordVisible ? <EyeOff /> : <Eye />}
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
